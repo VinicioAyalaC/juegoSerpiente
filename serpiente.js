@@ -54,6 +54,24 @@ function dibujarTablero(){
 }//fin de dibujarTablero
 
 
+//****************************************************************/
+// PARTE 2: PASO 1 Y 2 - CREAR FUNCION PINTARPARTE(LINEAX, LINEAY)
+function pintarParte(lineaX, lineaY){
+  let x = lineaX * TAMANIO_CELDA;
+  let y = lineaY * TAMANIO_CELDA;
+
+  // RELLENO DEL CUADRADO
+  ctx.fillStyle = "red";  // color de relleno del cuadrado
+  ctx.fillRect(x, y, TAMANIO_CELDA,TAMANIO_CELDA); //  fillRect(x, y, ancho, alto)
+
+
+  // BORDES DEL CUADRADO
+  ctx.strokeStyle = "white";  // color del borde
+  ctx.strokeRect(x, y, TAMANIO_CELDA,TAMANIO_CELDA);  // dibuja el contorno
+}
+
+
+
 
 
 //****************ORIGINAL*****************/    
@@ -72,6 +90,14 @@ function dibujarTablero(){
     function dibujarTodo() {
       limpiarCanvas();
       dibujarTablero();   //PASO 7: INVOCAR dibujarTablero()
+      
+      // pruebas
+      pintarParte(5, 5);    // prueba 1
+      pintarParte(10, 2);   // prueba 2
+      pintarParte(5,19);    // prueba 3
+      pintarParte(19,5);    // prueba 4
+      pintarParte(0,5);    // prueba 5
+      pintarParte(19,19);    // prueba 6
     }
 
 
