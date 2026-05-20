@@ -7,6 +7,40 @@
 const TAMANIO_CELDA = 25;
 
 
+//*** ARREGLO DE LA SERPIENTE
+/*const SERPIENTE = [
+    {x:5, y:4},
+    {x:4, y:4},
+    {x:3, y:4}
+];  
+
+const SERPIENTE = [   // EJERCICIO  1: SERPIENTE HORIZONTAL
+    {x:0, y:0},
+    {x:1, y:0},
+    {x:2, y:0}
+];   
+
+const SERPIENTE = [  // EJERCICIO  2: SERPIENTE FORMA DE L
+    {x:7, y:8},
+    {x:8, y:8},
+    {x:9, y:8},
+    {x:9, y:9}
+];   */
+
+const SERPIENTE = [ // EJERCICIO  3: SERPIENTE SUBIENDO LADO IZQUIERDO
+    {x:0, y:2},
+    {x:0, y:3},
+    {x:0, y:4},
+    {x:0, y:5},
+    {x:0, y:6}
+];
+
+
+
+
+
+
+
 //*** PASO 5: CREAR FUNCION dibujarTablero()
 
 function dibujarTablero(){
@@ -61,7 +95,7 @@ function pintarParte(lineaX, lineaY){
   let y = lineaY * TAMANIO_CELDA;
 
   // RELLENO DEL CUADRADO
-  ctx.fillStyle = "red";  // color de relleno del cuadrado
+  //ctx.fillStyle = "red";  // color de relleno del cuadrado
   ctx.fillRect(x, y, TAMANIO_CELDA,TAMANIO_CELDA); //  fillRect(x, y, ancho, alto)
 
 
@@ -69,6 +103,34 @@ function pintarParte(lineaX, lineaY){
   ctx.strokeStyle = "white";  // color del borde
   ctx.strokeRect(x, y, TAMANIO_CELDA,TAMANIO_CELDA);  // dibuja el contorno
 }
+
+
+// PARTE 2: PASO 3 - CREAR FUNCION PINTARSERPIENTE
+/*    function pintarSerpiente(){
+      for(let i=0; i<SERPIENTE.length; i++){
+        pintarParte(SERPIENTE[i].x, SERPIENTE[i].y);
+      }
+    }    */
+
+
+// PARTE 2: EJERCICIO FINAL - LA CABEZA TENGA UN COLOR DIFERENTE
+function pintarSerpiente(){
+  for(let i=0; i<SERPIENTE.length; i++){
+      if(i==0){   //pintamos de diferente color a la cabeza
+        ctx.fillStyle = "white";
+      } else{
+        ctx.fillStyle = "#3e8a36";
+      }
+
+      let x = SERPIENTE[i].x * TAMANIO_CELDA;
+      let y = SERPIENTE[i].y * TAMANIO_CELDA;
+      ctx.fillRect(x, y, TAMANIO_CELDA, TAMANIO_CELDA);
+      ctx.strokeStyle = "#2f3422";
+      ctx.strokeRect(x, y, TAMANIO_CELDA, TAMANIO_CELDA);
+
+  }
+}
+
 
 
 
@@ -91,13 +153,17 @@ function pintarParte(lineaX, lineaY){
       limpiarCanvas();
       dibujarTablero();   //PASO 7: INVOCAR dibujarTablero()
       
-      // pruebas
+      /* pruebas
       pintarParte(5, 5);    // prueba 1
       pintarParte(10, 2);   // prueba 2
       pintarParte(5,19);    // prueba 3
       pintarParte(19,5);    // prueba 4
       pintarParte(0,5);    // prueba 5
-      pintarParte(19,19);    // prueba 6
+      pintarParte(19,19);    // prueba 6  */
+
+      pintarSerpiente();
+
+
     }
 
 
