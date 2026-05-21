@@ -7,26 +7,20 @@
 const TAMANIO_CELDA = 25;
 
 
-//*** ARREGLO DE LA SERPIENTE
-/*const SERPIENTE = [
-    {x:5, y:4},
-    {x:4, y:4},
-    {x:3, y:4}
-];  
+//**** inicio de movimiento de la serpiente
+let direccionActual = "derecha";
 
-const SERPIENTE = [   // EJERCICIO  1: SERPIENTE HORIZONTAL
-    {x:0, y:0},
-    {x:1, y:0},
-    {x:2, y:0}
-];   
 
-const SERPIENTE = [  // EJERCICIO  2: SERPIENTE FORMA DE L
-    {x:7, y:8},
-    {x:8, y:8},
-    {x:9, y:8},
-    {x:9, y:9}
-];   */
+//***** variables ´para capturar coordenadas d la comida
+let comidaX;
+let comidaY;
 
+
+// intervalos de tiempo con setInterval
+let intervaloSerpiente;
+
+
+//********* Arreglo de la serpiente 
 const SERPIENTE = [ // EJERCICIO  3: SERPIENTE SUBIENDO LADO IZQUIERDO
     {x:0, y:2},
     {x:0, y:3},
@@ -34,11 +28,6 @@ const SERPIENTE = [ // EJERCICIO  3: SERPIENTE SUBIENDO LADO IZQUIERDO
     {x:0, y:5},
     {x:0, y:6}
 ];
-
-
-
-
-
 
 
 //*** PASO 5: CREAR FUNCION dibujarTablero()
@@ -117,9 +106,9 @@ function pintarParte(lineaX, lineaY){
 function pintarSerpiente(){
   for(let i=0; i<SERPIENTE.length; i++){
       if(i==0){   //pintamos de diferente color a la cabeza
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "white"; //cabezaa
       } else{
-        ctx.fillStyle = "#3e8a36";
+        ctx.fillStyle = "#3e8a36"; //cuerpo
       }
 
       let x = SERPIENTE[i].x * TAMANIO_CELDA;
@@ -129,6 +118,170 @@ function pintarSerpiente(){
       ctx.strokeRect(x, y, TAMANIO_CELDA, TAMANIO_CELDA);
 
   }
+}
+
+
+
+//****************************************************************/ PARTE 3
+
+// PARTE 1: MOVIMIENTO A LA DERECHA
+function moverDerecha(){
+  let cabezaActual = SERPIENTE[0];  // la cabeza está siempre al inicio [0] del arreglo
+
+  let nuevaCabeza = {
+    x: cabezaActual.x + 1,
+    y: cabezaActual.y
+  };
+
+  SERPIENTE.unshift(nuevaCabeza);  // unshift agrega un elemento al inicio del arreglo
+  SERPIENTE.pop();                 // pop() elimina el ultimo elemento del arreglo
+} // fin funcion moverDerecha
+
+
+
+// PARTE 2: funcion cambiarDireccion(direccion)
+function cambiarDireccion(direccion){
+
+    direccionActual = direccion;
+  
+} // fin de funcion
+
+
+
+// PARTE 3: crear funciones para movimiento de la serpierte
+function moverIzquierda(){
+  let cabezaActual = SERPIENTE[0];
+
+  let nuevaCabeza = {
+    x: cabezaActual.x - 1,
+    y: cabezaActual.y
+  };
+
+  SERPIENTE.unshift(nuevaCabeza);
+  SERPIENTE.pop();    // elimina el ultimo elemento
+
+} // fin de funcion mover izquierda
+
+
+function moverArriba(){
+  let cabezaActual = SERPIENTE[0];
+  
+  let nuevaCabeza = {
+    x: cabezaActual.x,
+    y: cabezaActual.y -1
+  };
+
+  SERPIENTE.unshift(nuevaCabeza);
+  SERPIENTE.pop();  // elimina el ultimo elemento
+
+} // fin de funcion mover arriba
+
+
+function moverAbajo(){
+  let cabezaActual = SERPIENTE[0];
+
+  let nuevaCabeza = {
+    x: cabezaActual.x,
+    y: cabezaActual.y + 1
+  };
+
+  SERPIENTE.unshift(nuevaCabeza);
+  SERPIENTE.pop();  // elimina el ultimo elemento
+
+}// fin de funcion mover abajo
+
+
+
+// PARTE 4: crear funciones iniciarJuego con setInterval que es automatizar el movimiento
+function iniciarJuego(){
+  intervaloSerpiente = setInterval(moverSerpiente, 300);
+
+  document.getElementById("estado").textContent = "Jugando";
+  document.getElementById("mensaje").textContent = "";
+}
+
+
+// pausar juego
+function pausarJuego(){
+  clearInterval(intervaloSerpiente);
+
+  document.getElementById("estado").textContent = "Juego Pausado";
+}
+
+
+//
+function moverSerpiente(){ // cambiamos direccionActual para darle otra direccion a la vibora
+  
+  if(direccionActual === "derecha")    { moverDerecha();   }
+  if(direccionActual === "izquierda")  { moverIzquierda(); }
+  if(direccionActual === "arriba")     { moverArriba();    }
+  if(direccionActual === "abajo")      { moverAbajo();     }
+
+
+  if(atrapaComida() === true){  // si es true: incrementa el puntaje
+    
+    // incrementamos 1 punto
+    let puntajeActual = parseInt(document.getElementById("puntaje").textContent);
+    document.getElementById("puntaje").textContent = puntajeActual + 1;
+
+
+    // incrementamos un cuadro a la serpiente
+    let colaSerpiente = SERPIENTE[SERPIENTE.length - 1]; // traemos el ultimo elemento del arreglo
+
+    //agregamos un elemento al final de la cola d la serpiente
+
+      if(direccionActual === "derecha"){
+        SERPIENTE.push({ x: colaSerpiente.x - 1, y: colaSerpiente.y });
+      }
+      
+      if(direccionActual === "izquierda"){
+        SERPIENTE.push({ x: colaSerpiente.x + 1, y: colaSerpiente.y });
+      }
+
+      if(direccionActual === "arriba"){
+        SERPIENTE.push({ x: colaSerpiente.x, y: colaSerpiente.y + 1 });
+      }
+
+      if(direccionActual === "abajo"){
+        SERPIENTE.push({ x: colaSerpiente.x, y: colaSerpiente.y -1 });
+      }
+
+  } // fin de if
+
+  dibujarTodo();
+
+}
+
+
+
+//***************************************** PARTE 8 :  COMIDA ALEATORIA
+
+function pintarComida(){
+
+  // calcular cantidad de celdas en el canvas
+  let celdasX = canvas.width / TAMANIO_CELDA;
+  let celdasY = canvas.height / TAMANIO_CELDA;
+
+  comidaX = Math.floor(Math.random() * celdasX );    //Math.floor: redondea hacia abajo
+  comidaY = Math.floor(Math.random() * celdasY );
+
+  ctx.fillStyle = "#3e8a36";  // pintar color d comida
+  pintarParte(comidaX, comidaY); 
+}
+
+
+//********   PARTE 9 – Detectar colisión con la comida
+function atrapaComida(){
+  let cabeza = SERPIENTE[0];
+
+
+  //validamos si la cabeza d la serpiente coincide con la comida
+  if(cabeza.x === comidaX && cabeza.y === comidaY){
+    return true;
+  } else{
+    return false;
+  }
+
 }
 
 
@@ -152,18 +305,8 @@ function pintarSerpiente(){
     function dibujarTodo() {
       limpiarCanvas();
       dibujarTablero();   //PASO 7: INVOCAR dibujarTablero()
-      
-      /* pruebas
-      pintarParte(5, 5);    // prueba 1
-      pintarParte(10, 2);   // prueba 2
-      pintarParte(5,19);    // prueba 3
-      pintarParte(19,5);    // prueba 4
-      pintarParte(0,5);    // prueba 5
-      pintarParte(19,19);    // prueba 6  */
-
+      pintarComida();      
       pintarSerpiente();
-
-
     }
 
 
