@@ -375,9 +375,6 @@ dibujarTodo();
 //++++++++++++++++++++++++ MEJORAS ADICIONALES
 
 
-
-
-
 //   2. UTILIZAR LAS TECLAS DE DIRECCION DEL TECLADO
 /*  evento.key: contiene el evento de la tecla de direccion del teclado
     Para las flechas, se utilizan: "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"
