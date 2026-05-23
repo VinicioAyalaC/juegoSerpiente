@@ -9,6 +9,7 @@ const TAMANIO_CELDA = 25;
 
 //**** inicio de movimiento de la serpiente
 let direccionActual = "derecha";
+let velocidad = 300;
 
 
 //***** variables ´para capturar coordenadas d la comida
@@ -24,10 +25,11 @@ let intervaloSerpiente;
 const SERPIENTE = [ // EJERCICIO  3: SERPIENTE SUBIENDO LADO IZQUIERDO
     {x:0, y:2},
     {x:0, y:3},
-    {x:0, y:4},
-    {x:0, y:5},
-    {x:0, y:6}
+    {x:0, y:4}
 ];
+
+
+let juegoTerminado = false;     // control del juego, si es true el juego termina
 
 
 //*** PASO 5: CREAR FUNCION dibujarTablero()
@@ -39,23 +41,6 @@ function dibujarTablero(){
   ctx.moveTo(25, 0);              // posicion inicial
   ctx.lineTo(25, canvas.height);  // dibuja una linea desde y hasta
   ctx.stroke();                   // dibuja la linea
-
-  /* // PASO 8: VARIAS LINEAS DE PRUEBA
-  ctx.beginPath();
-  ctx.moveTo(50, 0);
-  ctx.lineTo(50, canvas.height);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(75, 0);
-  ctx.lineTo(75, canvas.height);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(100, 0);
-  ctx.lineTo(100, canvas.height);
-  ctx.stroke();
-  fin de pruba paso 8   */
 
 
   // PASO 9: CREAR FOR PARA DIBUJAR LAS LINEAS VERTICALES
@@ -140,11 +125,33 @@ function moverDerecha(){
 
 
 // PARTE 2: funcion cambiarDireccion(direccion)
-function cambiarDireccion(direccion){
+//   1. EVITAR QUE LA SERPIENTE RETROCEDA
 
-    direccionActual = direccion;
+function cambiarDireccion(direccion){
   
-} // fin de funcion
+      // si su direccion de izquierda a derecha, no puede ir a la izquierda
+      if(direccion === "derecha" && direccionActual === "izquierda"){
+        return;
+      }
+
+      // si su direccion es de derecha a izquierda, no puede ir a la derecha
+      if(direccion === "izquierda" && direccionActual === "derecha" ){
+        return;
+      }
+
+      // si su direccion es de arriba a abajo, no puede ir arriba
+      if(direccion === "abajo"  &&  direccionActual === "arriba"){
+        return;
+      }
+
+      // si su direccion es de abajo a arriba, no puede ir abajo
+      if(direccion === "arriba"  && direccionActual === "abajo"){
+        return;
+      }
+
+      direccionActual = direccion;
+
+}// fin de  cambiarDireccion
 
 
 
@@ -194,7 +201,14 @@ function moverAbajo(){
 
 // PARTE 4: crear funciones iniciarJuego con setInterval que es automatizar el movimiento
 function iniciarJuego(){
-  intervaloSerpiente = setInterval(moverSerpiente, 300);
+
+  clearInterval(intervaloSerpiente);
+
+  if(juegoTerminado){  // validamos si la variable de control del juego está en true/false
+    return;
+  }
+
+  intervaloSerpiente = setInterval(moverSerpiente, velocidad);
 
   document.getElementById("estado").textContent = "Jugando";
   document.getElementById("mensaje").textContent = "";
@@ -212,10 +226,20 @@ function pausarJuego(){
 //
 function moverSerpiente(){ // cambiamos direccionActual para darle otra direccion a la vibora
   
+  if(juegoTerminado){   return; }  // no hacer nada si el juego terminó
+
+
   if(direccionActual === "derecha")    { moverDerecha();   }
   if(direccionActual === "izquierda")  { moverIzquierda(); }
   if(direccionActual === "arriba")     { moverArriba();    }
   if(direccionActual === "abajo")      { moverAbajo();     }
+
+  verificarColision();
+
+  if(juegoTerminado){
+    dibujarTodo();
+    return;
+  }
 
 
   if(atrapaComida() === true){  // si es true: incrementa el puntaje
@@ -277,24 +301,22 @@ function dibujarComida(){
 
 //********   PARTE 9 – Detectar colisión con la comida
 function atrapaComida(){
-  let cabeza = SERPIENTE[0];
+      let cabeza = SERPIENTE[0];
 
 
-  //validamos si la cabeza d la serpiente coincide con la comida
-  if(cabeza.x === comidaX && cabeza.y === comidaY){
-    return true;
-  } else{
-    return false;
-  }
-
-}
-
+      //validamos si la cabeza d la serpiente coincide con la comida
+      if(cabeza.x === comidaX && cabeza.y === comidaY){
+        return true;
+      } else{
+        return false;
+      }
+}//fin de atraparComida
 
 
-//-----------------PARTE 4: Implementar GAMER OVER al chocar con las paredes
 
-let juegoTerminado = false;     // control del juego, si es true el juego termina
+//-----------------PARTE 4: 
 
+//Actividad 1: Implementar GAME OVER al tocar los bordes
 function verificarColision(){
   
   let cabeza = SERPIENTE[0]; //
@@ -316,10 +338,64 @@ function verificarColision(){
 
 
 
+/*splice(): altera directamente el arreglo sobre el que se aplica 
+            y devuelve un nuevo arreglo con los elementos eliminados. 
+            array.splice(inicio, cantidadEliminar, elemento1, elemento2, ...)    */
+
+
+//Actividad 2: Implementar botón “Reiniciar juego”
+function reiniciarJuego(){
+
+  clearInterval(intervaloSerpiente); //detener los intervalos
+
+  SERPIENTE.splice(0, SERPIENTE.length); //dejamos en cero el arreglo
+
+  //********* Arreglo de la serpiente 
+  //cargamos pocision inicial de la serpiente
+SERPIENTE.push({x:0, y:2});       //cabeza
+SERPIENTE.push({x:0, y:3});       //cuerpo
+SERPIENTE.push({x:0, y:4});       //cola
+
+
+direccionActual = "derecha";  // direccion inicial
+
+juegoTerminado=false;
+document.getElementById("puntaje").textContent = "0";
+velocidad = 300;
+
+document.getElementById("estado").textContent = "listo";
+document.getElementById("mensaje").textContent = "Presiona iniciar para comenzar.";
+
+pintarComida();
+dibujarTodo();
+
+} // fin de reiniciarJuego
+
+
+//++++++++++++++++++++++++ MEJORAS ADICIONALES
 
 
 
 
+
+//   2. UTILIZAR LAS TECLAS DE DIRECCION DEL TECLADO
+/*  evento.key: contiene el evento de la tecla de direccion del teclado
+    Para las flechas, se utilizan: "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"
+    tecla "Enter" (Intro) y tecla barra espaciadora " " para pausar  */
+
+document.addEventListener("keydown",
+              function(evento){   
+                     switch(evento.key){
+                          case "ArrowRight" :  cambiarDireccion("derecha");    break;
+                          case "ArrowLeft"  :  cambiarDireccion("izquierda");  break;
+                          case "ArrowUp"    :  cambiarDireccion("arriba");     break;
+                          case "ArrowDown"  :  cambiarDireccion("abajo");      break;
+                          case "Enter"      :  iniciarJuego();                 break;
+                          case " "          :  pausarJuego();                  break;     
+                          default           :  break;
+                     }
+              }
+);
 
 
 //****************ORIGINAL*****************/    
