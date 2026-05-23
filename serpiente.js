@@ -220,6 +220,8 @@ function moverSerpiente(){ // cambiamos direccionActual para darle otra direccio
 
   if(atrapaComida() === true){  // si es true: incrementa el puntaje
     
+    pintarComida();
+    
     // incrementamos 1 punto
     let puntajeActual = parseInt(document.getElementById("puntaje").textContent);
     document.getElementById("puntaje").textContent = puntajeActual + 1;
@@ -265,6 +267,9 @@ function pintarComida(){
   comidaX = Math.floor(Math.random() * celdasX );    //Math.floor: redondea hacia abajo
   comidaY = Math.floor(Math.random() * celdasY );
 
+}
+
+function dibujarComida(){
   ctx.fillStyle = "#3e8a36";  // pintar color d comida
   pintarParte(comidaX, comidaY); 
 }
@@ -286,12 +291,41 @@ function atrapaComida(){
 
 
 
+//-----------------PARTE 4: Implementar GAMER OVER al chocar con las paredes
+
+let juegoTerminado = false;     // control del juego, si es true el juego termina
+
+function verificarColision(){
+  
+  let cabeza = SERPIENTE[0]; //
+
+  // calcular total de celdas q existen ancho y largo del canvas dividido para tamaño de celdas
+  let totalCeldas_x = canvas.width / TAMANIO_CELDA;
+  let totalCeldas_y = canvas.height / TAMANIO_CELDA;
+
+      if(cabeza.x<0 || cabeza.x >= totalCeldas_x || cabeza.y<0 || cabeza.y >= totalCeldas_y ){
+        clearInterval(intervaloSerpiente);
+        juegoTerminado=true;   // cambiamos estatus d variable de control de juego
+
+        document.getElementById("estado").textContent = "☠️ GAME OVER ☠️";
+        document.getElementById("mensaje").textContent = "Chocaste con las paredes del juego";
+      } // fin de if
+
+} // fin de verificarColision()
+
+
+
+
+
+
+
 
 
 
 //****************ORIGINAL*****************/    
 
     // Primera pintura del juego al cargar la página
+    pintarComida();
     dibujarTodo();
 
     // =========================
@@ -305,7 +339,7 @@ function atrapaComida(){
     function dibujarTodo() {
       limpiarCanvas();
       dibujarTablero();   //PASO 7: INVOCAR dibujarTablero()
-      pintarComida();      
+      dibujarComida();      
       pintarSerpiente();
     }
 
