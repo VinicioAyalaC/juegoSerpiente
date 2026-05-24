@@ -128,26 +128,22 @@ function moverDerecha(){
 //   1. EVITAR QUE LA SERPIENTE RETROCEDA
 
 function cambiarDireccion(direccion){
-  
-      // si su direccion de izquierda a derecha, no puede ir a la izquierda
-      if(direccion === "derecha" && direccionActual === "izquierda"){
-        return;
-      }
+    
+    if( direccion === "derecha" && direccionActual === "izquierda"){
+      return;
+    }
 
-      // si su direccion es de derecha a izquierda, no puede ir a la derecha
-      if(direccion === "izquierda" && direccionActual === "derecha" ){
-        return;
-      }
+    if(direccion === "izquierda" && direccionActual === "derecha"){
+      return;
+    }
 
-      // si su direccion es de arriba a abajo, no puede ir arriba
-      if(direccion === "abajo"  &&  direccionActual === "arriba"){
-        return;
-      }
+    if(direccion === "abajo" && direccionActual === "arriba"){
+      return;
+    }
 
-      // si su direccion es de abajo a arriba, no puede ir abajo
-      if(direccion === "arriba"  && direccionActual === "abajo"){
-        return;
-      }
+    if(direccion === "arriba" && direccionActual === "abajo"){
+      return;
+    }
 
       direccionActual = direccion;
 
